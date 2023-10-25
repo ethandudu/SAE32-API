@@ -1,7 +1,16 @@
 # SAE32-API
-## Sommaire
+## Summary
+- Github Actions
+- Installation
 
-## config.php
+## Github Actions
+Actual state of the Github Actions tests :
+|Name|Status|
+|----|------|
+|Tests.php|[![Tests](https://github.com/ethandudu/SAE32-API/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/ethandudu/SAE32-API/actions/workflows/tests.yml)|
+## Installation
+### config.php example
+Rename the `config.example.php` to `config.php` and edit the credentials
 ```php
 <?php
 $username = "username"; // username
@@ -21,3 +30,5 @@ try {
 }
 ?>
 ```
+### Add secrets to your repo
+Add two secrets named `url` and `token` wich are the url of your web server (like `https://sub.domain.tld`) and the token set in the `config.php` file
