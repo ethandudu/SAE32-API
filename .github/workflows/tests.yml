@@ -15,4 +15,4 @@ jobs:
       with:
         url: "${{ secrets.url }}/tests.php"
         method: 'GET'
-        customHeaders: '{"Authorization": "Bearer ${{ secrets.token }}"}'
+        customHeaders: '{"Authorization": "${{ secrets.token }}"}'
