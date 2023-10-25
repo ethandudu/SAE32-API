@@ -29,7 +29,7 @@ CREATE TABLE `index` (
   `numberframe` int(11) DEFAULT NULL,
   `datetime` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `index` (
 
 LOCK TABLES `index` WRITE;
 /*!40000 ALTER TABLE `index` DISABLE KEYS */;
+INSERT INTO `index` VALUES (1,1,'Test 1',1097,'2023-10-25 08:42:51'),(2,2,'Test 2',3,'2023-10-27 09:21:57');
 /*!40000 ALTER TABLE `index` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,12 +52,15 @@ DROP TABLE IF EXISTS `packets`;
 CREATE TABLE `packets` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `fileid` int(11) NOT NULL,
+  `packetid` int(11) NOT NULL,
   `protocols` varchar(80) NOT NULL,
   `macsrc` varchar(17) NOT NULL,
   `macdst` varchar(17) NOT NULL,
-  `data` longtext DEFAULT NULL,
+  `ipsrc` varchar(17) DEFAULT NULL,
+  `ipdst` varchar(17) DEFAULT NULL,
+  `data` longtext NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,6 +69,7 @@ CREATE TABLE `packets` (
 
 LOCK TABLES `packets` WRITE;
 /*!40000 ALTER TABLE `packets` DISABLE KEYS */;
+INSERT INTO `packets` VALUES (1,1,1,'sll:ethertype:ip:udp:mdns','3c:22:fb:3f:8c:ae','3c:22:fb:3f:8c:ae','192.168.1.1','192.168.1.2','{\"test\":\"ok\"}'),(2,1,2,'sll:ethertype:ip:udp:mdns','3c:22:fb:3f:8c:ae','3c:22:fb:3f:8c:ae','192.168.1.1','192.168.1.2','{\"test\":\"ok\"}'),(3,2,1,'sll:ethertype:ip:udp:mdns','3c:22:fb:3f:8c:ae','3c:22:fb:3f:8c:ae','192.168.1.1','192.168.1.2','{\"test\":\"ok\"}');
 /*!40000 ALTER TABLE `packets` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -77,4 +82,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-18 14:20:57
+-- Dump completed on 2023-10-25  9:23:29
