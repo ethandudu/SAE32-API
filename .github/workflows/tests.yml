@@ -24,7 +24,7 @@ jobs:
 
       - name: Send GET Request
         run: |
-          URL=${{ secrets.url }}
+          URL=${{ secrets.url }}/tests.php
           RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" $URL)
           echo "Response from $URL: $RESPONSE"
           echo "::set-output name=response::$RESPONSE"
