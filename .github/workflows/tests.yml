@@ -16,3 +16,8 @@ jobs:
         url: "${{ secrets.url }}/tests.php"
         method: 'GET'
         customHeaders: '{"Authorization": "${{ secrets.token }}"}'
+        expectedStatus: 200
+        # the response is a json, check if the key responsecode is 200
+        expectedResponse: '{"responsecode": 200}'
+        # else the test fails
+        failOnError: true
