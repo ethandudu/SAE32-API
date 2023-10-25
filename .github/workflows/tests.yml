@@ -7,17 +7,38 @@ on:
     branches: [ main ]
 
 jobs:
-  deployment:
+  check_response:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Test tests.php
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: "${{ secrets.url }}/tests.php"
-        method: 'GET'
-        customHeaders: '{"Authorization": "${{ secrets.token }}"}'
-        expectedStatus: 200
-        # the response is a json, check if the key responsecode is 200
-        expectedResponse: '{"responsecode": 200}'
-        # else the test fails
-        failOnError: true
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Send GET Request
+        run: |
+          URL=${{ secrets.url }}
+          RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" $URL)
+          echo "Response from $URL: $RESPONSE"
+          echo "::set-output name=response::$RESPONSE"
+
+      - name: Check JSON Response
+        id: check
+        run: |
+          RESPONSE_CODE=$(echo ${{ steps.send_get_request.outputs.response }} | jq -r '.responsecode')
+          if [ "$RESPONSE_CODE" == "200" ]; then
+            echo "Response code is 200"
+          else
+            echo "Response code is : $RESPONSE_CODE"
+            echo "Response body is : ${{ steps.send_get_request.outputs.response }}"
+            exit 1
+          fi
+        env:
+          API_URL: ${{ secrets.url }}
