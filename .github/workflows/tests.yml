@@ -22,22 +22,16 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Send GET Request
+      - name: Send GET Request and check JSON Response
         run: |
           URL=${{ secrets.url }}/tests.php
           RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" $URL)
-          echo "Response from $URL: $RESPONSE"
-          echo "::set-output name=response::$RESPONSE"
-
-      - name: Check JSON Response
-        id: check
-        run: |
-          RESPONSE_CODE=$(echo ${{ steps.send_get_request.outputs.response }} | jq -r '.responsecode')
+          RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
           if [ "$RESPONSE_CODE" == "200" ]; then
             echo "Response code is 200"
           else
             echo "Response code is : $RESPONSE_CODE"
-            echo "Response body is : ${{ steps.send_get_request.outputs.response }}"
+            echo "Response body is : $RESPONSE"
             exit 1
           fi
         env:
