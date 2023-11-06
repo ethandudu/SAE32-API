@@ -18,6 +18,7 @@ if (isset($tk)){
             'message' => 'OK',
             'data' => $req->fetchAll()
         );
+        $req->closeCursor();
     } else {
         header("HTTP/1.1 401 Unauthorized");        
         $response = array(

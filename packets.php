@@ -41,6 +41,7 @@ if (isset($tk)){
                     'data' => $req->fetchAll()
                 );
             }
+            $req->closeCursor();
         } else {
             header("HTTP/1.1 200 OK");
             $response = array(
