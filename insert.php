@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include ('config.php');
 header('Content-Type: application/json');
 
@@ -11,15 +15,15 @@ $tk = $headers['Authorization'];
 if (isset($tk)){
     if ($tk == $authorizedtoken){
         if (isset($_POST['dataindex']) && isset($_POST['datapackets'])){
-            $jsondata = ($_POST['dataindex']);
-            $reqindex = $bdd->prepare("INSERT INTO `index` ('name', 'numberframe', 'datetime') VALUES (:name, :numberframe, :datetime)");
-            $reqindex->bindParam(':name', $_POST['name']);
-            $reqindex->bindParam(':numberframe', $_POST['numberframe']);
-            $reqindex->bindParam(':datetime', $_POST['datetime']);
+            $jsondata = json_decode($_POST['dataindex'], true);
+            $reqindex = $bdd->prepare("INSERT INTO `index` (name, numberframe, datetime) VALUES (:name, :numberframe, :datetime)");
+            $reqindex->bindParam(':name', $jsondata['name']);
+            $reqindex->bindParam(':numberframe', $jsondata['numberframe']);
+            $reqindex->bindParam(':datetime', $jsondata['datetime']);
             $reqindex->execute();
             $id = $bdd->lastInsertId();
 
-            $jsondata = ($_POST['datapackets']);
+            $jsondata = json_decode($_POST['datapackets'], true);
             //execute many queries
             $req = $bdd->prepare("INSERT INTO `packets` ('fileid', 'packetid', 'protocols', 'macsrc', 'macdst', 'ipsrc', 'ipdst', 'data') VALUES (:fileid, :packetid, :protocols, :macsrc, :macdst, :ipsrc, :ipdst, :data)");
             $req->bindParam(':fileid', $id);
@@ -30,16 +34,7 @@ if (isset($tk)){
             $req->bindParam(':ipsrc', $ipsrc);
             $req->bindParam(':ipdst', $ipdst);
             $req->bindParam(':data', $data);
-            foreach ($jsondata as $packet) {
-                $packetid = $packet['packetid'];
-                $protocols = $packet['protocols'];
-                $macsrc = $packet['macsrc'];
-                $macdst = $packet['macdst'];
-                $ipsrc = $packet['ipsrc'];
-                $ipdst = $packet['ipdst'];
-                $data = $packet['data'];
-                $req->execute();
-            }
+            // TODO
             $req->closeCursor();
 
             header("HTTP/1.1 200 OK");
