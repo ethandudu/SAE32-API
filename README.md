@@ -1,7 +1,7 @@
 # SAE32-API
 ## Summary
-- Github Actions
-- Installation
+- [Github Actions](#Github_Actions)
+- [Installation](#Installation)
 
 ## Github Actions
 Actual state of the Github Actions tests :
