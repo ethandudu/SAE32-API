@@ -22,20 +22,24 @@ if (isset($tk)){
             $reqindex->bindParam(':datetime', $jsondata['datetime']);
             $reqindex->execute();
             $id = $bdd->lastInsertId();
+            $reqindex->closeCursor();
 
-            $jsondata = json_decode($_POST['datapackets'], true);
-            //execute many queries
-            $req = $bdd->prepare("INSERT INTO `packets` ('fileid', 'packetid', 'protocols', 'macsrc', 'macdst', 'ipsrc', 'ipdst', 'data') VALUES (:fileid, :packetid, :protocols, :macsrc, :macdst, :ipsrc, :ipdst, :data)");
-            $req->bindParam(':fileid', $id);
-            $req->bindParam(':packetid', $packetid);
-            $req->bindParam(':protocols', $protocols);
-            $req->bindParam(':macsrc', $macsrc);
-            $req->bindParam(':macdst', $macdst);
-            $req->bindParam(':ipsrc', $ipsrc);
-            $req->bindParam(':ipdst', $ipdst);
-            $req->bindParam(':data', $data);
-            // TODO
-            $req->closeCursor();
+            $datapackets = json_decode($_POST['datapackets'],true);
+            foreach($datapackets["packets"] as $packet){
+                $reqpacket = $bdd->prepare("INSERT INTO `packets` (fileid, packetid, protocols, macsrc, macdst, ipsrc, ipdst, data) VALUES (:fileid, :packetid, :protocols, :macsrc, :macdst, :ipsrc, :ipdst, :data)");
+                $reqpacket->bindParam(':fileid', $id);
+                $reqpacket->bindParam(':packetid', $packet['packetid']);
+                $reqpacket->bindParam(':protocols', $packet['protocols']);
+                $reqpacket->bindParam(':macsrc', $packet['macsrc']);
+                $reqpacket->bindParam(':macdst', $packet['macdst']);
+                $reqpacket->bindParam(':ipsrc', $packet['ipsrc']);
+                $reqpacket->bindParam(':ipdst', $packet['ipdst']);
+                $reqpacket->bindParam(':data', $packet['data']);
+                $reqpacket->execute();
+            }
+            $reqpacket->closeCursor();
+
+            
 
             header("HTTP/1.1 200 OK");
             $response = array(
