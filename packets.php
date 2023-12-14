@@ -25,21 +25,39 @@ if (isset($tk)){
                 $req->bindParam(':fileid', $fileid);
                 $req->bindParam(':packetid', $packetid);
                 $req->execute();
-                $response = array(
-                    'responsecode' => '200',
-                    'message' => 'OK',
-                    'data' => $req->fetchAll()
-                );
+                if ($req->rowCount() == 0){
+                    header("HTTP/1.1 404 Not Found");
+                    $response = array(
+                        'responsecode' => '404',
+                        'message' => 'Packet not found'
+                    );
+                } else {
+                    header("HTTP/1.1 200 OK");
+                    $response = array(
+                        'responsecode' => '200',
+                        'message' => 'OK',
+                        'data' => $req->fetchAll()
+                    );
+                }
             } else {
                 header("HTTP/1.1 200 OK");
                 $req = $bdd->prepare('SELECT ID, fileid, protocols, macsrc, macdst, ipsrc, ipdst FROM `packets` WHERE fileid = :fileid');
                 $req->bindParam(':fileid', $fileid);
                 $req->execute();
-                $response = array(
-                    'responsecode' => '200',
-                    'message' => 'OK',
-                    'data' => $req->fetchAll()
-                );
+                if ($req->rowCount() == 0){
+                    header("HTTP/1.1 404 Not Found");
+                    $response = array(
+                        'responsecode' => '404',
+                        'message' => 'No packets found'
+                    );
+                } else {
+                    header("HTTP/1.1 200 OK");
+                    $response = array(
+                        'responsecode' => '200',
+                        'message' => 'OK',
+                        'data' => $req->fetchAll()
+                    );
+                }
             }
             $req->closeCursor();
         } else {
