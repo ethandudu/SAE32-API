@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include ('config.php');
 header('Content-Type: application/json');
 
@@ -22,15 +26,17 @@ if (isset($tk)){
 
             $datapackets = json_decode($_POST['datapackets'],true);
             foreach($datapackets["packets"] as $packet){
+                $protocols = json_encode($packet['protocols']);
+                $data = json_encode($packet['data']);
                 $reqpacket = $bdd->prepare("INSERT INTO `packets` (fileid, packetid, protocols, macsrc, macdst, ipsrc, ipdst, data) VALUES (:fileid, :packetid, :protocols, :macsrc, :macdst, :ipsrc, :ipdst, :data)");
                 $reqpacket->bindParam(':fileid', $id);
                 $reqpacket->bindParam(':packetid', $packet['packetid']);
-                $reqpacket->bindParam(':protocols', $packet['protocols']);
+                $reqpacket->bindParam(':protocols', $protocols);
                 $reqpacket->bindParam(':macsrc', $packet['macsrc']);
                 $reqpacket->bindParam(':macdst', $packet['macdst']);
                 $reqpacket->bindParam(':ipsrc', $packet['ipsrc']);
                 $reqpacket->bindParam(':ipdst', $packet['ipdst']);
-                $reqpacket->bindParam(':data', $packet['data']);
+                $reqpacket->bindParam(':data', $data);
                 $reqpacket->execute();
             }
             $reqpacket->closeCursor();
