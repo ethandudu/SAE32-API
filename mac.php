@@ -41,8 +41,10 @@ if (isset($tk)){
             $response = array(
                 'responsecode' => '200',
                 'message' => 'OK',
-                'vendorsrc' => $vendorsrc,
-                'vendordst' => $vendordst
+                'data' => array(
+                    'vendorsrc' => $vendorsrc,
+                    'vendordst' => $vendordst
+                )
             );
 
             
