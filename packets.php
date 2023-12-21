@@ -18,6 +18,29 @@ if (isset($_GET['packetid'])) {
 //check if the token is correct
 if (isset($tk)){
     if ($tk == $authorizedtoken){
+        if ($headers["User-Agent"] == "GH-Action"){
+            //get the last fileid
+            $req = $bdd->prepare('SELECT fileid FROM `packets` ORDER BY fileid DESC LIMIT 1');
+            $req->execute();
+            $lastfileid = $req->fetch();
+            $fileid = $lastfileid['fileid'];
+            $req->closeCursor();
+            if ($req->rowCount()== 0){
+                header("HTTP/1.1 404 Not Found");
+                $response = array(
+                    'responsecode' => '404',
+                    'message' => 'No packets found'
+                );
+            } else {
+                header("HTTP/1.1 200 OK");
+                $response = array(
+                    'responsecode' => '200',
+                    'message' => 'OK',
+                    'data' => array(
+                        'fileid' => $fileid)
+                );
+            }
+        }
         if (isset($fileid)){
             if (isset($packetid)){
                 header("HTTP/1.1 200 OK");
