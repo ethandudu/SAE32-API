@@ -36,7 +36,8 @@ jobs:
             echo "Response body is : $RESPONSE"
             exit 1
           fi
-  check_tests:
+
+  check_tests_list:
     runs-on: ubuntu-latest
 
     steps:
@@ -58,6 +59,49 @@ jobs:
           RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
           if [ "$RESPONSE_CODE" == "200" ]; then
             echo "Response code is 200"
+          else
+            echo "Response code is : $RESPONSE_CODE"
+            echo "Response body is : $RESPONSE"
+            exit 1
+          fi
+        env:
+          API_URL: ${{ secrets.url }}
+
+  check_packetslist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Send GET Request and check JSON Response
+        run: |
+          URL=${{ secrets.url }}/packets.php
+          RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" "User-Agent: GH-Action" $URL)
+          RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
+          if [ "$RESPONSE_CODE" == "200" ]; then
+            echo "Response code is 200"
+            LASTPACKETID=$(echo $RESPONSE | jq -r '.data[0].fileid')
+            echo "Last packet id is $LASTPACKETID"
+
+            URL=${{ secrets.url }}/packets.php?fileid=$LASTPACKETID
+            RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" $URL)
+            RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
+            if [ "$RESPONSE_CODE" == "200" ]; then
+              echo "Response code is 200"
+            else
+              echo "Response code is : $RESPONSE_CODE"
+              echo "Response body is : $RESPONSE"
+              exit 1
+            fi            
           else
             echo "Response code is : $RESPONSE_CODE"
             echo "Response body is : $RESPONSE"
