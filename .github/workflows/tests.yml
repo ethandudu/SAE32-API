@@ -89,7 +89,7 @@ jobs:
           RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
           if [ "$RESPONSE_CODE" == "200" ]; then
             echo "Response code is 200"
-            LASTPACKETID=$(echo $RESPONSE | jq -r '.data[0].fileid')
+            LASTPACKETID=$(echo $RESPONSE | jq -r '.data.fileid')
             echo "Last packet id is $LASTPACKETID"
 
             URL=${{ secrets.url }}/packets.php?fileid=$LASTPACKETID
