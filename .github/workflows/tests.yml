@@ -85,7 +85,7 @@ jobs:
       - name: Send GET Request and check JSON Response
         run: |
           URL=${{ secrets.url }}/packets.php
-          RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" "User-Agent: GH-Action" $URL)
+          RESPONSE=$(curl -s -H "Accept: application/json" -H "User-Agent: GH-Action" -H "Authorization: ${{ secrets.token }}" $URL)
           RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
           if [ "$RESPONSE_CODE" == "200" ]; then
             echo "Response code is 200"
