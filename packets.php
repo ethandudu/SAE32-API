@@ -40,6 +40,8 @@ if (isset($tk)){
                         'fileid' => $fileid)
                 );
             }
+            echo json_encode($response);
+            exit();
         }
         if (isset($fileid)){
             if (isset($packetid)){
