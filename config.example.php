@@ -1,11 +1,11 @@
 <?php
+$authorizedtoken = "token"; // token
 $username = "username"; // username
 $password = "password"; // password of the database
-$hostname = "sub.domain.tld"; // host of the database
+$hostname = "localhost"; // host of the database
 $namebase = "database"; // name of the database
 $port = "3306"; // port of the database
 
-$authorizedtoken = "token"; //token for the java app from "SAE32-Processing"
 
 // Attempt to connect to the database
 try {
