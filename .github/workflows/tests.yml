@@ -7,7 +7,35 @@ on:
     branches: [ main ]
 
 jobs:
-  check_response:
+  check_insertion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Send POST Request and check JSON Response
+        run: |
+          CONTENT="{\"packets\":{\"0\":{\"packetid\":0,\"macsrc\":\"3c:22:fb:00:00:00\",\"ipsrc\":\"172.16.0.1\",\"ipdst\":\"192.168.1.1\",\"datapackets\":{\"tcp\":{\"dstport\":\"443\",\"srcport\":\"80\"}},\"macdst\":\"d4:76:a0:00:00:00\",\"protocols\":[\"eth\",\"ethertype\",\"ip\",\"tcp\",\"tls\"]},\"1\":{\"packetid\":1,\"macsrc\":\"d4:76:a0:00:56:02\",\"ipsrc\":\"192.168.1.1\",\"ipdst\":\"172.16.0.1\",\"datapackets\":{\"tcp\":{\"dstport\":\"80\",\"srcport\":\"443\"}},\"macdst\":\"3c:22:fb:00:00:00\",\"protocols\":[\"eth\",\"ethertype\",\"ip\",\"tcp\"]}}}"
+          URL=${{ secrets.url }}/insert.php
+          RESPONSE=$(curl -s -H "Accept: application/json" -H "Authorization: ${{ secrets.token }}" -d "$CONTENT" $URL)
+          RESPONSE_CODE=$(echo $RESPONSE | jq -r '.responsecode')
+          if [ "$RESPONSE_CODE" == "200" ]; then
+            echo "Response code is 200"
+          else
+            echo "Response code is : $RESPONSE_CODE"
+            echo "Response body is : $RESPONSE"
+            exit 1
+          fi
+  check_tests:
     runs-on: ubuntu-latest
 
     steps:
