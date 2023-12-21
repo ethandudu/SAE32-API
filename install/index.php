@@ -108,16 +108,13 @@ if (isset($_POST['submit'])) {
     <script src="js/materialize.min.js"></script>
     <script>
         function generateToken(){
-            console.log("test")
-    var token = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@%$=+?[]{}-_&";
-    for(var i = 0; i < 16; i++){
-        token += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    //change the value of the input
-    document.getElementById('token').value = token;
-}
-
+            var token = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@%$=+?[]{}-_&";
+            for(var i = 0; i < 16; i++){
+                token += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            document.getElementById('token').value = token;
+        }
     </script>
 </body>
 
