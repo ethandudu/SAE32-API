@@ -66,7 +66,7 @@ if (isset($tk)){
                 }
             } else {
                 header("HTTP/1.1 200 OK");
-                $req = $bdd->prepare('SELECT fileid, protocols FROM `packets` WHERE fileid = :fileid ORDER BY packetid ASC');
+                $req = $bdd->prepare('SELECT fileid, protocols, packetid FROM `packets` WHERE fileid = :fileid ORDER BY packetid ASC');
                 $req->bindParam(':fileid', $fileid);
                 $req->execute();
                 if ($req->rowCount() == 0){
