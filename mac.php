@@ -26,6 +26,10 @@ if (isset($tk)){
             } else {
                 $vendorsrc = $reqbdd->fetch();
                 $vendorsrc = $vendorsrc['Organization'];
+                if (strlen($vendorsrc) > 20){
+                    $vendorsrc = substr($vendorsrc, 0, 20) . '.';
+                }
+                
             }
             $reqbdd->closeCursor();
             $reqbdd = $bdd->prepare('SELECT Organization FROM oui WHERE Assignment = :macdst');
@@ -35,6 +39,9 @@ if (isset($tk)){
             } else {
                 $vendordst = $reqbdd->fetch();
                 $vendordst = $vendordst['Organization'];
+                if (strlen($vendordst) > 20){
+                    $vendordst = substr($vendordst, 0, 20) . '.';
+                }
             }
             $reqbdd->closeCursor();
             header("HTTP/1.1 200 OK");
