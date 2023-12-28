@@ -23,7 +23,7 @@ if (isset($tk)){
             $datapackets = json_decode($_POST['datapackets'],true);
             foreach($datapackets["packets"] as $packet){
                 $protocols = json_encode($packet['protocols']);
-                $data = json_encode($packet['data']);
+                $data = json_encode($packet['datapackets']);
                 $reqpacket = $bdd->prepare("INSERT INTO `packets` (fileid, packetid, protocols, macsrc, macdst, ipsrc, ipdst, data) VALUES (:fileid, :packetid, :protocols, :macsrc, :macdst, :ipsrc, :ipdst, :data)");
                 $reqpacket->bindParam(':fileid', $id);
                 $reqpacket->bindParam(':packetid', $packet['packetid']);
