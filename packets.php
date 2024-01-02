@@ -53,7 +53,7 @@ if (isset($tk)){
                 if ($req->rowCount() == 0){
                     header("HTTP/1.1 404 Not Found");
                     $response = array(
-                        'responsecode' => '404',
+                        'responsecode' => '405',
                         'message' => 'Packet not found'
                     );
                 } else {
